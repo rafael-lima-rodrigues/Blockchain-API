@@ -1,6 +1,6 @@
 package com.blockchain.controller;
 
-import com.blockchain.model.DocumentsSigned;
+import com.blockchain.model.DigitalDocument;
 import com.blockchain.model.query.RichQuery;
 import com.blockchain.service.DigitalSignService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +20,8 @@ public class DigitalSignController {
 
     @GetMapping("/get/{id}")
     @ResponseBody
-    ResponseEntity<DocumentsSigned> get(@PathVariable("id") String id) {
-        Optional<DocumentsSigned> documentsData = Optional.ofNullable(digitalSignService.getById(id));
+    ResponseEntity<DigitalDocument> get(@PathVariable("id") String id) {
+        Optional<DigitalDocument> documentsData = Optional.ofNullable(digitalSignService.getById(id));
 
         if (documentsData.isPresent()){
             return new ResponseEntity<>(documentsData.get(), HttpStatus.OK);
@@ -30,15 +30,15 @@ public class DigitalSignController {
         }
     }
 
-    @GetMapping("getAll")
-    ResponseEntity<List<DocumentsSigned>> getAll() {
+    @GetMapping("/getAll")
+    ResponseEntity<List<DigitalDocument>> getAll() {
         try {
-            List<DocumentsSigned> documentsSigneds = new ArrayList<>();
-            digitalSignService.getAll().forEach(documentsSigneds::add);
-            if (documentsSigneds.isEmpty()) {
+            List<DigitalDocument> digitalDocuments = new ArrayList<>();
+            digitalSignService.getAll().forEach(digitalDocuments::add);
+            if (digitalDocuments.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
-            return new ResponseEntity<>(documentsSigneds, HttpStatus.OK);
+            return new ResponseEntity<>(digitalDocuments, HttpStatus.OK);
         } catch (Exception e) {
 
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -46,11 +46,11 @@ public class DigitalSignController {
     }
 
     @PostMapping("/save")
-    ResponseEntity<DocumentsSigned> save(@RequestBody DocumentsSigned documentsSigned) {
+    ResponseEntity<DigitalDocument> save(@RequestBody DigitalDocument digitalDocument) {
 
         try {
-            digitalSignService.save(documentsSigned);
-            return new ResponseEntity<>(documentsSigned, HttpStatus.CREATED);
+            digitalSignService.save(digitalDocument);
+            return new ResponseEntity<>(digitalDocument, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -58,19 +58,19 @@ public class DigitalSignController {
     }
 
     @PutMapping("/update/{id}")
-    ResponseEntity<DocumentsSigned> update(@PathVariable("id") String id,
-                                           @RequestBody DocumentsSigned documentsSigned){
-        Optional<DocumentsSigned> documentData = Optional.ofNullable(digitalSignService.getById(id));
+    ResponseEntity<DigitalDocument> update(@PathVariable("id") String id,
+                                           @RequestBody DigitalDocument digitalDocument){
+        Optional<DigitalDocument> documentData = Optional.ofNullable(digitalSignService.getById(id));
 
         if (documentData.isPresent()){
 
-            DocumentsSigned _documentsSigned = documentData.get();
-            _documentsSigned.setDescricao(documentsSigned.getDescricao());
-            _documentsSigned.setDados(documentsSigned.getDados());
-            _documentsSigned.setUserIdOwner(documentsSigned.getUserIdOwner());
-            _documentsSigned.setSign(documentsSigned.getSign());
-            digitalSignService.update(id,_documentsSigned);
-            return new ResponseEntity<>(_documentsSigned, HttpStatus.OK);
+            DigitalDocument _digitalDocument = documentData.get();
+            _digitalDocument.setDescription(digitalDocument.getDescription());
+            _digitalDocument.setData(digitalDocument.getData());
+            _digitalDocument.setUserIdOwner(digitalDocument.getUserIdOwner());
+            _digitalDocument.setSignature(digitalDocument.getSignature());
+            digitalSignService.update(id, _digitalDocument);
+            return new ResponseEntity<>(_digitalDocument, HttpStatus.OK);
         }else{
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -78,7 +78,7 @@ public class DigitalSignController {
     }
 
     @DeleteMapping("/delete/{id}")
-    ResponseEntity<DocumentsSigned> delete(@PathVariable ("id") String dsId) {
+    ResponseEntity<DigitalDocument> delete(@PathVariable ("id") String dsId) {
         try {
             digitalSignService.delete(dsId);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -89,7 +89,7 @@ public class DigitalSignController {
     }
 
     @GetMapping("/query")
-    List<DocumentsSigned> queryDS(@RequestParam(required = false) String type,
+    List<DigitalDocument> query(@RequestParam(required = false) String type,
                                   @RequestParam String userId) {
         RichQuery query = new RichQuery();
         Map<String, Object> selector = new HashMap<>();

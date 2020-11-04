@@ -8,7 +8,7 @@
 <div class="container" align="center">
     <h2>Criar Documento</h2>
     <div>
-        <form class="form-horizontal" th:object="${documentsSigned}" th:action="@{/documents/save}" enctype="multipart/form-data" method="post">
+        <form class="form-horizontal" th:object="${digitalDocument}" th:action="@{/documents/save}" enctype="multipart/form-data" method="post">
 
             <div class="form-group">
                 <label class="col-sm-2 control-label">Descrição: </label>

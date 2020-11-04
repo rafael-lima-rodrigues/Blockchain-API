@@ -1,6 +1,6 @@
 package com.blockchain.repository.blockchain;
 
-import com.blockchain.model.DocumentsSigned;
+import com.blockchain.model.DigitalDocument;
 import com.blockchain.model.TransactionHistory;
 import com.blockchain.model.query.RichQuery;
 import com.blockchain.repository.DigitalSignDAO;
@@ -34,50 +34,50 @@ public class DigitalSignDAOImp implements DigitalSignDAO {
     Channel channel;
 
     @Override
-    public DocumentsSigned getbyId(String id) {
+    public DigitalDocument getbyId(String id) {
         String key = String.valueOf(id);
         String json = chaincodeExecuter.getObjectByKey(key);
-        DocumentsSigned documentsSigned = null;
+        DigitalDocument digitalDocument = null;
         if (json != null && !json.isEmpty()) {
             try {
-                documentsSigned = objectMapper.readValue(json, DocumentsSigned.class);
+                digitalDocument = objectMapper.readValue(json, DigitalDocument.class);
             } catch (IOException ex) {
                 Logger.getLogger(DigitalSignDAOImp.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        return documentsSigned;
+        return digitalDocument;
     }
 
     @Override
-    public void save(DocumentsSigned documentsSigned) {
-        chaincodeExecuter.save(documentsSigned);
+    public void save(DigitalDocument digitalDocument) {
+        chaincodeExecuter.save(digitalDocument);
 
 //        String key = UUID.randomUUID().toString();
     }
 
     @Override
-    public void update(String key, DocumentsSigned documentsSigned) {
-        chaincodeExecuter.update(key, documentsSigned);
+    public void update(String key, DigitalDocument digitalDocument) {
+        chaincodeExecuter.update(key, digitalDocument);
 
     }
 
- /*   public void update(DocumentsSigned documentsSigned, String userId){
+ /*   public void update(DigitalDocument documentsSigned, String userId){
         chaincodeExecuterDS.update(documentsSigned.getId(), userId, documentsSigned);
     }*/
 
     @Override
-    public List<DocumentsSigned> query(RichQuery query) {
-        List<DocumentsSigned> documentsSignedList = new ArrayList<>();
-        TypeReference<List<DocumentsSigned>> listType = new TypeReference<List<DocumentsSigned>>() {
+    public List<DigitalDocument> query(RichQuery query) {
+        List<DigitalDocument> digitalDocumentList = new ArrayList<>();
+        TypeReference<List<DigitalDocument>> listType = new TypeReference<List<DigitalDocument>>() {
         };
 
         String json = chaincodeExecuter.query(query);
         try {
-            documentsSignedList = objectMapper.readValue(json, listType);
+            digitalDocumentList = objectMapper.readValue(json, listType);
         } catch (IOException ex) {
             Logger.getLogger(DigitalSignDAOImp.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return documentsSignedList;
+        return digitalDocumentList;
     }
 
     @Override
@@ -87,9 +87,9 @@ public class DigitalSignDAOImp implements DigitalSignDAO {
     }
 
     @Override
-    public List<DocumentsSigned> getAll() {
-        List<DocumentsSigned> documentsSignedList = new ArrayList<>();
-        TypeReference<List<DocumentsSigned>> listType = new TypeReference<List<DocumentsSigned>>() {
+    public List<DigitalDocument> getAll() {
+        List<DigitalDocument> digitalDocumentList = new ArrayList<>();
+        TypeReference<List<DigitalDocument>> listType = new TypeReference<List<DigitalDocument>>() {
         };
 
         RichQuery query = new RichQuery();
@@ -99,12 +99,12 @@ public class DigitalSignDAOImp implements DigitalSignDAO {
 
         String json = chaincodeExecuter.query(query);
         try {
-            documentsSignedList = objectMapper.readValue(json, listType);
+            digitalDocumentList = objectMapper.readValue(json, listType);
         } catch (IOException ex) {
             Logger.getLogger(DigitalSignDAOImp.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        return documentsSignedList;
+        return digitalDocumentList;
     }
 
     @Override
@@ -115,8 +115,8 @@ public class DigitalSignDAOImp implements DigitalSignDAO {
             try {
                 //String userString = objectMapper.writeValueAsString(history.getAsset());
                 // UserIdentity userIdentity = objectMapper.readValue(userString, UserIdentity.class);
-                DocumentsSigned documentsSigned = objectMapper.readValue(history.getAsset().toString(), DocumentsSigned.class);
-                history.setAsset(documentsSigned);
+                DigitalDocument digitalDocument = objectMapper.readValue(history.getAsset().toString(), DigitalDocument.class);
+                history.setAsset(digitalDocument);
                 BlockInfo info = channel.queryBlockByTransactionID(history.getTransactionId());
                 for (BlockInfo.EnvelopeInfo envelopeInfo : info.getEnvelopeInfos()) {
                     if (envelopeInfo.getTransactionID().equals(history.getTransactionId())) {

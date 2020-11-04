@@ -1,7 +1,7 @@
 package com.blockchain.util;
 
 import com.blockchain.config.BlockchainNetworkAttributes;
-import com.blockchain.model.DocumentsSigned;
+import com.blockchain.model.DigitalDocument;
 import com.blockchain.model.TransactionHistory;
 import com.blockchain.model.query.RichQuery;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -102,16 +102,16 @@ public class ChaincodeExecuterImp implements ChaincodeExecuter {
     }
 
 
-    public String save(DocumentsSigned documentsSigned) {
+    public String save(DigitalDocument digitalDocument) {
 
         String result = "";
-        if (documentsSigned.getId() == null || documentsSigned.getId().isEmpty()){
-            documentsSigned.setId(UUID.randomUUID().toString());
+        if (digitalDocument.getId() == null || digitalDocument.getId().isEmpty()){
+            digitalDocument.setId(UUID.randomUUID().toString());
         }
-        String[] args = {documentsSigned.getId(), documentsSigned.toJSONString()};
+        String[] args = {digitalDocument.getId(), digitalDocument.toJSONString()};
 
         try {
-            result = executeTransactionDS(true, "createDigitalSign", args);
+            result = executeTransactionDS(true, "createDigitalDoc", args);
         } catch (InvalidArgumentException | ProposalException ex) {
             Logger.getLogger(ChaincodeExecuterImp.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -119,13 +119,13 @@ public class ChaincodeExecuterImp implements ChaincodeExecuter {
         return result;
     }
 
-    public String update(String key,  DocumentsSigned documentsSigned) {
+    public String update(String key,  DigitalDocument digitalDocument) {
 
         String result = "";
-        String[] args = {key, documentsSigned.toJSONString()};
+        String[] args = {key, digitalDocument.toJSONString()};
 
         try {
-            result = executeTransactionDS(true, "updateDigitalSign", args);
+            result = executeTransactionDS(true, "updateDigitalDoc", args);
         } catch (InvalidArgumentException | ProposalException ex) {
             Logger.getLogger(ChaincodeExecuterImp.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -137,7 +137,7 @@ public class ChaincodeExecuterImp implements ChaincodeExecuter {
         String result = "";
         String[] args = {key};
         try {
-            result = executeTransactionDS(false, "readDigitalSign", args);
+            result = executeTransactionDS(false, "findDigitalDocById", args);
         } catch (InvalidArgumentException | ProposalException ex) {
             Logger.getLogger(ChaincodeExecuterImp.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -148,7 +148,7 @@ public class ChaincodeExecuterImp implements ChaincodeExecuter {
         String result = "";
         String[] args = {key};
         try {
-            result = executeTransactionDS(true, "deleteDigitalSign", args);
+            result = executeTransactionDS(true, "deleteDigitalDoc", args);
         } catch (InvalidArgumentException | ProposalException ex) {
             Logger.getLogger(ChaincodeExecuterImp.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -160,7 +160,7 @@ public class ChaincodeExecuterImp implements ChaincodeExecuter {
         String result = "";
         try {
             String[] args = {objectMapper.writeValueAsString(query)};
-            result = executeTransactionDS(false, "queryDS", args);
+            result = executeTransactionDS(false, "queryDigitalDoc", args);
         } catch (InvalidArgumentException | ProposalException | JsonProcessingException ex) {
             Logger.getLogger(ChaincodeExecuterImp.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -171,7 +171,7 @@ public class ChaincodeExecuterImp implements ChaincodeExecuter {
         String result = "";
         String[] args = {key};
         try {
-            result = executeTransactionDS(false, "getDSHistory", args);
+            result = executeTransactionDS(false, "getHistoryDigitalDoc", args);
         } catch (InvalidArgumentException | ProposalException ex) {
             Logger.getLogger(ChaincodeExecuterImp.class.getName()).log(Level.SEVERE, null, ex);
         }
