@@ -6,19 +6,21 @@ import com.blockchain.service.DigitalSignService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
-@CrossOrigin(origins = "http://localhost:8081")
+@CrossOrigin(origins = "http://localhost:8100")
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/doc")
 public class DigitalSignController {
 
     @Autowired
     DigitalSignService digitalSignService;
 
     @GetMapping("/get/{id}")
+   @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @ResponseBody
     ResponseEntity<DigitalDocument> get(@PathVariable("id") String id) {
         Optional<DigitalDocument> documentsData = Optional.ofNullable(digitalSignService.getById(id));
@@ -31,6 +33,7 @@ public class DigitalSignController {
     }
 
     @GetMapping("/getAll")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     ResponseEntity<List<DigitalDocument>> getAll() {
         try {
             List<DigitalDocument> digitalDocuments = new ArrayList<>();
@@ -46,6 +49,7 @@ public class DigitalSignController {
     }
 
     @PostMapping("/save")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     ResponseEntity<DigitalDocument> save(@RequestBody DigitalDocument digitalDocument) {
 
         try {
@@ -58,6 +62,7 @@ public class DigitalSignController {
     }
 
     @PutMapping("/update/{id}")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     ResponseEntity<DigitalDocument> update(@PathVariable("id") String id,
                                            @RequestBody DigitalDocument digitalDocument){
         Optional<DigitalDocument> documentData = Optional.ofNullable(digitalSignService.getById(id));
@@ -78,6 +83,7 @@ public class DigitalSignController {
     }
 
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     ResponseEntity<DigitalDocument> delete(@PathVariable ("id") String dsId) {
         try {
             digitalSignService.delete(dsId);
@@ -89,6 +95,7 @@ public class DigitalSignController {
     }
 
     @GetMapping("/query")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     List<DigitalDocument> query(@RequestParam(required = false) String type,
                                   @RequestParam String userId) {
         RichQuery query = new RichQuery();
