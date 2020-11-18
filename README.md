@@ -27,8 +27,10 @@ Next, clone this repository and open in yours favorite IDE (for this project was
 After that, downloaded this project and open in yours favorite IDE. Then, whether you have maven installed open the Terminal and run the command: **mvn spring-boot:run**.
 It will deploy to 8081/api on a tomcat server.
 
+The security model of this project is provide by Spring Segurity and JWT. Thus, before to access the addresses to communicate with Blockchain is necessary to generate a token accesing /api/auth/signup and login by /api/auth/signin.
+
 ## Built With
 * Java 1.8
 * Maven - Dependency Management
 * Fabric-java-sdk 1.4.7
-* Spring Boot
+* Spring Frameworks
